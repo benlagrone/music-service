@@ -1,0 +1,12 @@
+audiocraft_env
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+output
+output.wav
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info

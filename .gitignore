@@ -1,0 +1,26 @@
+# Virtual environments
+audiocraft_env/
+venv/
+.venv/
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Generated assets
+output/
+output.wav
+
+# Hugging Face caches
+.cache/
+hf_cache/
+
+# Logs and temp files
+*.log
+*.tmp
+.DS_Store

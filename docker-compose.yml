@@ -1,0 +1,19 @@
+services:
+  music-service:
+    build: .
+    container_name: music-service
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./output:/app/output
+      - ./.cache/huggingface:/app/.cache/huggingface
+    environment:
+      - HF_HOME=/app/.cache/huggingface
+      - TRANSFORMERS_CACHE=/app/.cache/huggingface
+    networks:
+      - fortress-phronesis-net
+
+networks:
+  fortress-phronesis-net:
+    external: true
+    name: fortress-phronesis-net
