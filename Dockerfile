@@ -4,7 +4,8 @@ WORKDIR /app
 
 # System deps for audio processing and git-based installs
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg git && \
+    apt-get install -y --no-install-recommends ffmpeg git pkg-config \
+        libavdevice-dev libavfilter-dev libavformat-dev libavcodec-dev libavutil-dev && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
