@@ -5,9 +5,9 @@ WORKDIR /app
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Etc/UTC
 
-# System deps for audio processing, PyAV, and git-based installs
+# System deps for audio processing, PyAV, C/C++ builds, and git-based installs
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends tzdata ffmpeg git pkg-config \
+    apt-get install -y --no-install-recommends tzdata ffmpeg git pkg-config build-essential \
         libavdevice-dev libavfilter-dev libavformat-dev libavcodec-dev libavutil-dev && \
     ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo ${TZ} > /etc/timezone && \
