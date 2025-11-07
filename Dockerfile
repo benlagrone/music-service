@@ -7,7 +7,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # System deps for audio processing, PyAV, C/C++ builds, and git-based installs
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends tzdata ffmpeg git pkg-config build-essential \
+    apt-get install -y --no-install-recommends tzdata software-properties-common ca-certificates && \
+    add-apt-repository -y ppa:ubuntuhandbook1/ffmpeg6 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg git pkg-config build-essential \
         libavdevice-dev libavfilter-dev libavformat-dev libavcodec-dev libavutil-dev && \
     ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo ${TZ} > /etc/timezone && \
