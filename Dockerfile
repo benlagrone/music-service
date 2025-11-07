@@ -21,7 +21,8 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir "cython<3" && \
-    pip install --no-cache-dir --no-build-isolation -r requirements.txt
+    CFLAGS="${CFLAGS:-} -DAV_CODEC_CAP_OTHER_THREADS=0" \
+        pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
 COPY . .
 
