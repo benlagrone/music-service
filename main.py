@@ -6,7 +6,12 @@ import os
 try:
     from torch.utils import _pytree as torch_pytree  # type: ignore
     if not hasattr(torch_pytree, "register_pytree_node"):
-        torch_pytree.register_pytree_node = torch_pytree._register_pytree_node  # type: ignore[attr-defined]
+        _orig_register = torch_pytree._register_pytree_node
+
+        def _register_pytree_node(tree_type, flatten_fn, unflatten_fn, *, serialized_type_name=None):
+            return _orig_register(tree_type, flatten_fn, unflatten_fn)
+
+        torch_pytree.register_pytree_node = _register_pytree_node  # type: ignore[attr-defined]
 except Exception:
     pass
 

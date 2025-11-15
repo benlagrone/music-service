@@ -6,10 +6,15 @@ import uuid
 import os
 
 try:
-    # torch 2.1.x exposes only _register_pytree_node; newer libs expect register_pytree_node
     from torch.utils import _pytree as torch_pytree  # type: ignore
     if not hasattr(torch_pytree, "register_pytree_node"):
-        torch_pytree.register_pytree_node = torch_pytree._register_pytree_node  # type: ignore[attr-defined]
+        _orig_register = torch_pytree._register_pytree_node
+
+        def _register_pytree_node(tree_type, flatten_fn, unflatten_fn, *, serialized_type_name=None):
+            # Older torch only exposes _register_pytree_node without the newer kwargs.
+            return _orig_register(tree_type, flatten_fn, unflatten_fn)
+
+        torch_pytree.register_pytree_node = _register_pytree_node  # type: ignore[attr-defined]
 except Exception:
     pass
 
