@@ -1,8 +1,16 @@
 from fastapi import FastAPI, Query
 from pydantic import BaseModel
-from audiocraft.models import MusicGen
 import uuid
 import os
+
+try:
+    from torch.utils import _pytree as torch_pytree  # type: ignore
+    if not hasattr(torch_pytree, "register_pytree_node"):
+        torch_pytree.register_pytree_node = torch_pytree._register_pytree_node  # type: ignore[attr-defined]
+except Exception:
+    pass
+
+from audiocraft.models import MusicGen
 
 
 app = FastAPI()

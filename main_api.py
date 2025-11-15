@@ -1,10 +1,19 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from audiocraft.models import MusicGen
 import torchaudio
 from datetime import datetime
 import uuid
 import os
+
+try:
+    # torch 2.1.x exposes only _register_pytree_node; newer libs expect register_pytree_node
+    from torch.utils import _pytree as torch_pytree  # type: ignore
+    if not hasattr(torch_pytree, "register_pytree_node"):
+        torch_pytree.register_pytree_node = torch_pytree._register_pytree_node  # type: ignore[attr-defined]
+except Exception:
+    pass
+
+from audiocraft.models import MusicGen
 
 from prompt_generator import get_music_prompt  # ← from earlier step
 
