@@ -20,33 +20,34 @@ except Exception:
 
 from audiocraft.models import MusicGen
 
-from prompt_generator import get_music_prompt  # ← from earlier step
-
 app = FastAPI()
 model = MusicGen.get_pretrained('medium')
 output_dir = "output"
 os.makedirs(output_dir, exist_ok=True)
 
+
 class MusicRequest(BaseModel):
-    scene: str
+    prompt: str | None = None
+    scene: str | None = None
     duration: int = 60  # seconds
+
 
 @app.post("/generate-music/")
 def generate_music(request: MusicRequest):
-    prompt = get_music_prompt(request.scene)
-    if not prompt:
-        raise HTTPException(status_code=500, detail="Failed to generate prompt from Ollama.")
-    
+    prompt_text = request.prompt or request.scene
+    if not prompt_text:
+        raise HTTPException(status_code=400, detail="Provide either 'prompt' or 'scene' text.")
+
     model.set_generation_params(duration=request.duration)
-    wav = model.generate([prompt])
+    wav = model.generate([prompt_text])
 
     filename = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:8]}.wav"
     filepath = os.path.join(output_dir, filename)
     torchaudio.save(filepath, wav[0].cpu(), sample_rate=32000)
 
     return {
-        "scene": request.scene,
-        "prompt": prompt,
+        "prompt": prompt_text,
+        "duration": request.duration,
         "file": filepath
     }
 #   uvicorn main_api:app --host 0.0.0.0 --port 7000
